@@ -25,8 +25,6 @@
 #import <Availability.h>
 #import <objc/runtime.h>
 
-NSString* const UIApplicationRegisterUserNotificationSettings = @"UIApplicationRegisterUserNotificationSettings";
-
 @implementation AppDelegate (APPAppEvent)
 
 #pragma mark -
@@ -47,6 +45,22 @@ NSString* const UIApplicationRegisterUserNotificationSettings = @"UIApplicationR
     [self exchange_methods:@selector(application:didReceiveLocalNotification:)
                   swizzled:@selector(swizzled_application:didReceiveLocalNotification:)];
 #endif
+    
+    [self exchange_methods:@selector(applicationDidEnterBackground:)
+                  swizzled:@selector(swizzled_applicationDidEnterBackground:)];
+    
+    [self exchange_methods:@selector(applicationDidBecomeActive:)
+                  swizzled:@selector(swizzled_applicationDidBecomeActive:)];
+    
+    [self exchange_methods:@selector(applicationWillEnterForeground:)
+                  swizzled:@selector(swizzled_applicationWillEnterForeground:)];
+
+    [self exchange_methods:@selector(applicationWillResignActive:)
+                  swizzled:@selector(swizzled_applicationWillResignActive:)];
+    
+    [self exchange_methods:@selector(applicationWillTerminate:)
+                  swizzled:@selector(swizzled_applicationWillTerminate:)];
+
 }
 
 #pragma mark -
@@ -61,7 +75,7 @@ NSString* const UIApplicationRegisterUserNotificationSettings = @"UIApplicationR
     didRegisterUserNotificationSettings:(UIUserNotificationSettings*)settings
 {
     // re-post (broadcast)
-    [self postNotificationName:UIApplicationRegisterUserNotificationSettings object:settings];
+    [self postNotificationName:@"didRegisterUserNotificationSettings" object:settings];
     // This actually calls the original method over in AppDelegate
     [self swizzled_application:application didRegisterUserNotificationSettings:settings];
 }
@@ -76,11 +90,51 @@ NSString* const UIApplicationRegisterUserNotificationSettings = @"UIApplicationR
     didReceiveLocalNotification:(UILocalNotification*)notification
 {
     // re-post (broadcast)
-    [self postNotificationName:CDVLocalNotification object:notification];
+    [self postNotificationName:@"didReceiveLocalNotification" object:notification];
     // This actually calls the original method over in AppDelegate
     [self swizzled_application:application didReceiveLocalNotification:notification];
 }
 #endif
+
+- (void) swizzled_applicationDidEnterBackground:(UIApplication*)application
+{
+    // re-post (broadcast)
+    [self postNotificationName:@"applicationDidEnterBackground" object:application];
+    // This actually calls the original method over in AppDelegate
+    [self swizzled_applicationDidEnterBackground: application];
+}
+
+- (void) swizzled_applicationDidBecomeActive:(UIApplication *)application
+{
+    // re-post (broadcast)
+    [self postNotificationName:@"applicationDidBecomeActive" object:application];
+    // This actually calls the original method over in AppDelegate
+    [self swizzled_applicationDidBecomeActive: application];
+}
+
+- (void) swizzled_applicationWillEnterForeground:(UIApplication *)application
+{
+    // re-post (broadcast)
+    [self postNotificationName:@"applicationWillEnterForeground" object:application];
+    // This actually calls the original method over in AppDelegate
+    [self swizzled_applicationWillEnterForeground: application];
+}
+
+- (void) swizzled_applicationWillResignActive:(UIApplication *)application
+{
+    // re-post (broadcast)
+    [self postNotificationName:@"applicationWillResignActive" object:application];
+    // This actually calls the original method over in AppDelegate
+    [self swizzled_applicationWillResignActive: application];
+}
+
+- (void) swizzled_applicationWillTerminate:(UIApplication *)application
+{
+    // re-post (broadcast)
+    [self postNotificationName:@"applicationWillTerminate" object:application];
+    // This actually calls the original method over in AppDelegate
+    [self swizzled_applicationWillTerminate: application];
+}
 
 #pragma mark -
 #pragma mark Core

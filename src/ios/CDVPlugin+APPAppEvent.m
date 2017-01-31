@@ -62,15 +62,32 @@ void swizzled_pluginInitialize(id self, SEL _cmd)
     }
 
     [self addObserver:NSSelectorFromString(@"didReceiveLocalNotification:")
-                 name:CDVLocalNotification
-               object:NULL];
-
-    [self addObserver:NSSelectorFromString(@"didFinishLaunchingWithOptions:")
-                 name:UIApplicationDidFinishLaunchingNotification
+                 name:@"didReceiveLocalNotification"
                object:NULL];
 
     [self addObserver:NSSelectorFromString(@"didRegisterUserNotificationSettings:")
-                 name:UIApplicationRegisterUserNotificationSettings
+                 name:@"didRegisterUserNotificationSettings"
+               object:NULL];
+    
+    // Life-Cycle events
+    [self addObserver:NSSelectorFromString(@"applicationDidEnterBackground:")
+                 name:@"applicationDidEnterBackground"
+               object:NULL];
+    
+    [self addObserver:NSSelectorFromString(@"applicationDidBecomeActive:")
+                 name:@"applicationDidBecomeActive"
+               object:NULL];
+    
+    [self addObserver:NSSelectorFromString(@"applicationWillEnterForeground:")
+                 name:@"applicationWillEnterForeground"
+               object:NULL];
+    
+    [self addObserver:NSSelectorFromString(@"applicationWillResignActive:")
+                 name:@"applicationWillResignActive"
+               object:NULL];
+    
+    [self addObserver:NSSelectorFromString(@"applicationWillTerminate:")
+                 name:@"applicationWillTerminate"
                object:NULL];
 }
 
